@@ -14,6 +14,7 @@ from trajviz.config import FrustumStyle, TrajectoryRenderConfig
 logger = get_logger()
 
 
+@jaxtyped(typechecker=beartype)
 def _compute_frustum_pixels(
     forward_2d: Float[np.ndarray, " 2"],
     center: tuple[int, int],
