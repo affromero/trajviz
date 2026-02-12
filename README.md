@@ -1,8 +1,8 @@
 # trajviz
 
-[![PyPI version](https://img.shields.io/pypi/v/trajviz?color=blue)](https://pypi.org/project/trajviz/)
+[![PyPI version](https://badge.fury.io/py/trajviz.svg)](https://pypi.org/project/trajviz/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/trajviz)](https://pypi.org/project/trajviz/)
-[![Python versions](https://img.shields.io/pypi/pyversions/trajviz)](https://pypi.org/project/trajviz/)
+[![Python versions](https://img.shields.io/pypi/pyversions/trajviz?cacheSeconds=60)](https://pypi.org/project/trajviz/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/affromero/trajviz/actions/workflows/ci.yml/badge.svg)](https://github.com/affromero/trajviz/actions/workflows/ci.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
@@ -64,7 +64,9 @@ colors = np.tile([0.2, 0.8, 0.4, 1.0], (n, 1)).astype(np.float32)
 ## Installation
 
 ```bash
-pip install git+https://github.com/affromero/trajviz.git
+pip install trajviz
+# or
+uv add trajviz
 ```
 
 ## Usage
