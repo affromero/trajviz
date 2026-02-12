@@ -47,8 +47,11 @@ def build_projection_matrix(
         ]
     )
 
-    # Combined rotation: Rx @ Rz, then take XY columns
-    rot = rx @ rz
+    # Combined rotation: Rz @ Rx, then take XY columns.
+    # This order ensures Z (up) projects straight up on screen,
+    # cleanly separating all three axes. The previous Rx @ Rz
+    # collapsed Y and Z to the same screen direction.
+    rot = rz @ rx
     return rot[:, :2].astype(np.float64)
 
 

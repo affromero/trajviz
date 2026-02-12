@@ -18,6 +18,22 @@ class FrustumStyle(str, Enum):
     """Wireframe pyramid showing full 3D FOV."""
 
 
+class AxisPosition(str, Enum):
+    """Position of the XYZ axis indicator on the canvas."""
+
+    BOTTOM_LEFT = "bottom_left"
+    """Bottom-left corner (default)."""
+
+    BOTTOM_RIGHT = "bottom_right"
+    """Bottom-right corner."""
+
+    TOP_LEFT = "top_left"
+    """Top-left corner."""
+
+    TOP_RIGHT = "top_right"
+    """Top-right corner."""
+
+
 class TrajectoryRenderConfig(BaseModel):
     """Rendering configuration for trajectory videos."""
 
@@ -97,3 +113,24 @@ class TrajectoryRenderConfig(BaseModel):
 
     crf: int = 18
     """H.264 constant rate factor (lower = higher quality)."""
+
+    axis_enabled: bool = True
+    """Whether to draw an XYZ axis indicator in the corner."""
+
+    axis_position: AxisPosition = AxisPosition.BOTTOM_LEFT
+    """Which corner to place the axis indicator."""
+
+    axis_length: int = 40
+    """Length of each axis arrow in pixels."""
+
+    axis_color_rgb: tuple[int, int, int] = (180, 180, 180)
+    """Color for all axis arrows and labels as (R, G, B) 0-255."""
+
+    axis_thickness: int = 2
+    """Line thickness for axis arrows."""
+
+    axis_label_scale: float = 0.45
+    """Font scale for axis labels."""
+
+    axis_margin: int = 15
+    """Margin from canvas edge to axis center in pixels."""

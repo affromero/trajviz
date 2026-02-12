@@ -9,7 +9,7 @@ from beartype import beartype
 from difflogtest import get_logger
 from jaxtyping import Float, Int, UInt8, jaxtyped
 
-from trajviz.config import FrustumStyle, TrajectoryRenderConfig
+from trajviz.config import AxisPosition, FrustumStyle, TrajectoryRenderConfig
 
 logger = get_logger()
 
@@ -71,11 +71,90 @@ def _compute_frustum_pixels(
 
 
 @jaxtyped(typechecker=beartype)
+def _draw_axis_indicator(
+    canvas: UInt8[np.ndarray, "h w 3"],
+    axis_directions: Float[np.ndarray, "3 2"],
+    config: TrajectoryRenderConfig,
+) -> None:
+    """Draw an XYZ axis indicator in a corner of the frame.
+
+    All axes use a single neutral color so they don't compete
+    with trajectory colors. Each arrow is labelled X, Y, or Z.
+
+    Args:
+        canvas: RGB frame to draw on (modified in-place).
+        axis_directions: Projected 2D directions for X, Y, Z axes
+            with shape (3, 2). Y component should already be
+            flipped for screen coordinates.
+        config: Rendering configuration.
+
+    """
+    h, w = canvas.shape[:2]
+    length = config.axis_length
+    margin = config.axis_margin
+    color = config.axis_color_rgb
+
+    # Compute origin based on configured position
+    pos = config.axis_position
+    if pos == AxisPosition.BOTTOM_LEFT:
+        ox = margin + length
+        oy = h - margin - length
+    elif pos == AxisPosition.BOTTOM_RIGHT:
+        ox = w - margin - length
+        oy = h - margin - length
+    elif pos == AxisPosition.TOP_LEFT:
+        ox = margin + length
+        oy = margin + length
+    else:  # TOP_RIGHT
+        ox = w - margin - length
+        oy = margin + length
+
+    labels = ["X", "Y", "Z"]
+
+    for i in range(3):
+        direction = axis_directions[i]
+        norm = float(np.linalg.norm(direction))
+        if norm < 1e-6:
+            continue
+
+        # Normalize and scale to pixel length
+        dx = float(direction[0] / norm * length)
+        dy = float(direction[1] / norm * length)
+        end_x = int(ox + dx)
+        end_y = int(oy + dy)
+
+        cv2.arrowedLine(
+            canvas,
+            (ox, oy),
+            (end_x, end_y),
+            color,
+            config.axis_thickness,
+            cv2.LINE_AA,
+            tipLength=0.2,
+        )
+
+        # Place label slightly beyond the arrow tip
+        label_x = int(ox + dx * 1.25) + 2
+        label_y = int(oy + dy * 1.25) + 4
+        cv2.putText(
+            canvas,
+            labels[i],
+            (label_x, label_y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            config.axis_label_scale,
+            color,
+            1,
+            cv2.LINE_AA,
+        )
+
+
+@jaxtyped(typechecker=beartype)
 def render_trajectory_frames(
     pixel_positions: Int[np.ndarray, "n 2"],
     colors_rgb: Int[np.ndarray, "n 3"],
     config: TrajectoryRenderConfig,
     forward_pixels: Float[np.ndarray, "n 2"] | None = None,
+    axis_directions: Float[np.ndarray, "3 2"] | None = None,
 ) -> Iterator[UInt8[np.ndarray, "h w 3"]]:
     """Yield rendered trajectory frames as RGB uint8 arrays.
 
@@ -94,6 +173,8 @@ def render_trajectory_frames(
         config: Rendering configuration.
         forward_pixels: Projected 2D forward directions (n, 2).
             Required when ``frustum_style`` is not NONE.
+        axis_directions: Projected 2D directions for X, Y, Z axes
+            with shape (3, 2). Drawn when ``axis_enabled`` is True.
 
     Yields:
         RGB uint8 frames with shape (height, width, 3).
@@ -284,5 +365,9 @@ def render_trajectory_frames(
             config.marker_edge_thickness,
             cv2.LINE_AA,
         )
+
+        # XYZ axis indicator (drawn last so it's always on top)
+        if config.axis_enabled and axis_directions is not None:
+            _draw_axis_indicator(canvas, axis_directions, config)
 
         yield canvas

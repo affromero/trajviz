@@ -85,6 +85,15 @@ def render_trajectory_video(
         forward_pixels = fwd_2d
 
     # ----------------------------------------------------------
+    # Compute XYZ axis directions for indicator overlay
+    # ----------------------------------------------------------
+    axis_directions: Float[np.ndarray, "3 2"] | None = None
+    if config.axis_enabled:
+        axes_3d = np.eye(3, dtype=np.float64)
+        axis_directions = (axes_3d @ proj).astype(np.float64)
+        axis_directions[:, 1] *= -1  # Flip Y for screen coords
+
+    # ----------------------------------------------------------
     # Open ffmpeg subprocess with stdin pipe
     # ----------------------------------------------------------
     w, h = config.width, config.height
@@ -124,7 +133,7 @@ def render_trajectory_video(
         raise RuntimeError(msg)
 
     for frame in render_trajectory_frames(
-        pixels, colors_rgb, config, forward_pixels
+        pixels, colors_rgb, config, forward_pixels, axis_directions
     ):
         stdin.write(frame.tobytes())
 
