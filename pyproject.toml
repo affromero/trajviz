@@ -16,10 +16,31 @@ name = "trajviz"
 requires-python = ">=3.10"
 version = "0.0.1"
 
+[project.optional-dependencies]
+dev = [
+  "pre-commit",
+  "pytest"
+]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_incomplete_defs = true
+explicit_package_bases = true
+follow_untyped_imports = true
+ignore_missing_imports = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+addopts = ["--tb=short", "-v"]
+testpaths = ["tests"]
 
 [tool.ruff]
 exclude = [
@@ -41,6 +62,10 @@ skip-magic-trailing-comma = false
 fixable = ["ALL"]
 ignore = ["ANN401", "C901", "COM812", "D203", "D211", "D213", "E501", "ERA001", "F722", "F821", "G004", "ISC001", "N812", "PERF203", "PERF401", "PLR0911", "PLR0912", "PLR0913", "PLR0915", "PLR2004", "PLW2901", "RUF012", "S603", "S607", "SIM115", "SLF001", "T201", "TCH010", "TRY301"]
 select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["INP001"]
+"tests/*" = ["D100", "D102", "D103", "INP001", "PT011", "S101", "S108"]
 
 [tool.tomlsort]
 all = true
