@@ -1,5 +1,16 @@
 # trajviz
 
+[![PyPI version](https://img.shields.io/pypi/v/trajviz?color=blue)](https://pypi.org/project/trajviz/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/trajviz)](https://pypi.org/project/trajviz/)
+[![Python versions](https://img.shields.io/pypi/pyversions/trajviz)](https://pypi.org/project/trajviz/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/affromero/trajviz/actions/workflows/ci.yml/badge.svg)](https://github.com/affromero/trajviz/actions/workflows/ci.yml)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![mypy](https://img.shields.io/badge/type--checked-mypy-blue.svg)](https://mypy-lang.org/)
+[![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://docs.pydantic.dev/latest/)
+[![Beartype](https://raw.githubusercontent.com/beartype/beartype-assets/main/badge/bear-ified.svg)](https://beartype.readthedocs.io)
+
 Fast 3D camera trajectory video renderer using NumPy + OpenCV.
 
 Renders animated top-down trajectory visualizations from 3D camera positions, with configurable ghost trails, color-coded markers, glow effects, and camera frustum overlays. Frames are piped directly to ffmpeg as raw RGB — no intermediate files.
